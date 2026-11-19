@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#040d21" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Black Gallo" />
+  <link id="pwa-manifest-link" rel="manifest" />
+  <link id="pwa-apple-icon" rel="apple-touch-icon" />
+  <title>Black Gallo - Sin Pajas | T96 Jesús De Otoro</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Russo One e Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Russo+One&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-deep: #030a1c;
+      --electric-blue: #0066ff;
+      --cyan-glow: #00d4ff;
+      --gold-light: #ffe875;
+      --gold-mid: #f5b014;
+      --gold-dark: #a66a00;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-deep);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(0, 119, 255, 0.35) 0%, transparent 45%),
+        radial-gradient(circle at 85% 30%, rgba(0, 212, 255, 0.25) 0%, transparent 40%),
+        radial-gradient(circle at 50% 80%, rgba(0, 81, 255, 0.35) 0%, transparent 55%),
+        linear-gradient(180deg, #040d24 0%, #071942 50%, #030a1c 100%);
+      color: #ffffff;
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .font-display {
+      font-family: 'Russo One', sans-serif;
+      letter-spacing: 0.03em;
+    }
+
+    /* Efecto de texto metálico dorado y plateado como el cartel */
+    .text-gold-metallic {
+      background: linear-gradient(180deg, #fff6b3 0%, #ffd038 45%, #d48806 85%, #8c5200 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.9));
+    }
+
+    .text-silver-metallic {
+      background: linear-gradient(180deg, #ffffff 0%, #d9e2ec 50%, #829ab1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0px 3px 3px rgba(0, 0, 0, 0.95));
+    }
+
+    /* Marco dorado del tablero */
+    .gold-board-border {
+      border: 3px solid #f5b014;
+      box-shadow: 
+        0 0 18px rgba(0, 174, 255, 0.55),
+        inset 0 0 10px rgba(245, 176, 20, 0.4);
+    }
+
+    /* Barras de metas globales */
+    .meta-bar {
+      background: linear-gradient(90deg, #090d16 0%, #162038 50%, #090d16 100%);
+      border: 2px solid #eab308;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6), inset 0 0 8px rgba(234, 179, 8, 0.25);
+      position: relative;
+    }
+
+    /* Estilo de tarjeta de día (papel blanco/gris claro como el tablero físico) */
+    .day-cell {
+      background: linear-gradient(145deg, #f8fafc 0%, #e2e8f0 100%);
+      border: 1.5px solid #475569;
+      color: #0f172a;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .day-cell:active {
+      transform: scale(0.96);
+    }
+
+    /* Animación sutil para rayos de fondo */
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.45; }
+      50% { opacity: 0.85; }
+    }
+    .lightning-bg {
+      animation: pulseGlow 4s infinite ease-in-out;
+      pointer-events: none;
+    }
+
+    /* Scrollbar limpio para modal de código POO */
+    pre::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    pre::-webkit-scrollbar-thumb {
+      background: #3b82f6;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="pb-10 select-none">
+
+  <!-- Fondo decorativo SVG de rayos eléctricos -->
+  <svg class="fixed inset-0 w-full h-full lightning-bg z-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 800" preserveAspectRatio="none">
+    <path d="M40 0 L75 140 L35 160 L95 330 L50 350 L110 520" stroke="#00d4ff" stroke-width="1.5" fill="none" opacity="0.35"/>
+    <path d="M360 20 L310 180 L355 210 L290 400 L340 430 L275 650" stroke="#38bdf8" stroke-width="1.5" fill="none" opacity="0.35"/>
+    <path d="M180 0 L210 90 L175 110 L225 230" stroke="#60a5fa" stroke-width="1" fill="none" opacity="0.25"/>
+  </svg>
+
+  <!-- CONTENEDOR PRINCIPAL MOBILE-FIRST -->
+  <div class="relative z-10 max-w-lg mx-auto px-2.5 pt-3">
+
+    <!-- ENCABEZADO: ESCUDOS BG + CORONA + BLACK GALLO SIN PAJAS -->
+    <header class="relative mb-3">
+      <!-- Barra superior de acciones rápidas (PWA, Respaldo, POO & Reset) -->
+      <div class="flex flex-wrap items-center justify-between gap-1.5 mb-2 px-1">
+        <div class="flex items-center gap-1.5">
+          <span class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider bg-blue-950/90 border border-cyan-400/40 text-cyan-300 px-2.5 py-1 rounded-full shadow">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            App POO
+          </span>
+          <button id="btn-instalar-pwa" class="hidden text-[11px] font-bold bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 px-2.5 py-1 rounded-full shadow-md transition active:scale-95 items-center gap-1">
+            <span>📲</span> Instalar App
+          </button>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button id="btn-respaldo" title="Exportar o importar copia de seguridad" class="text-[11px] font-bold bg-blue-950/90 hover:bg-blue-900 text-cyan-200 border border-cyan-400/40 px-2.5 py-1 rounded-full shadow transition active:scale-95 flex items-center gap-1">
+            <span>💾</span> Respaldo
+          </button>
+          <button id="btn-ver-poo" class="text-[11px] font-bold bg-slate-900/90 hover:bg-slate-800 text-amber-300 border border-amber-400/50 px-2.5 py-1 rounded-full shadow transition active:scale-95 flex items-center gap-1">
+            <span>&lt;/&gt;</span> Clases POO
+          </button>
+          <button id="btn-restaurar" title="Restaurar datos de la foto" class="text-[11px] font-bold bg-red-950/80 hover:bg-red-900 text-red-200 border border-red-500/40 px-2 py-1 rounded-full shadow transition active:scale-95">
+            ↺
+          </button>
+        </div>
+      </div>
+
+      <!-- Banner Principal Estilo Cartel -->
+      <div class="relative bg-gradient-to-b from-slate-950/95 via-blue-950/90 to-slate-950/95 rounded-2xl border-2 border-amber-400/80 p-3 shadow-2xl overflow-hidden">
+        <div class="flex items-center justify-between gap-2">
+          <!-- Escudo BG Izquierdo -->
+          <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-amber-300 via-amber-500 to-amber-700 p-0.5 shadow-lg transform -rotate-3">
+            <div class="w-full h-full bg-slate-950 rounded-[10px] flex flex-col items-center justify-center">
+              <span class="text-[8px] text-amber-400 leading-none">★</span>
+              <span class="font-display text-lg text-gold-metallic leading-none">BG</span>
+            </div>
+          </div>
+
+          <!-- Título Central con Corona -->
+          <div class="text-center flex-1">
+            <svg class="w-9 h-5 mx-auto -mb-1 drop-shadow" viewBox="0 0 64 32" fill="none">
+              <path d="M4 26L10 8L22 18L32 4L42 18L54 8L60 26H4Z" fill="url(#crownGrad)" stroke="#78350f" stroke-width="2"/>
+              <circle cx="10" cy="6" r="2.5" fill="#fef08a"/>
+              <circle cx="32" cy="3" r="3" fill="#fef08a"/>
+              <circle cx="54" cy="6" r="2.5" fill="#fef08a"/>
+              <defs>
+                <linearGradient id="crownGrad" x1="32" y1="4" x2="32" y2="26" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#fef08a"/>
+                  <stop offset="0.5" stop-color="#f59e0b"/>
+                  <stop offset="1" stop-color="#92400e"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <h1 class="font-display text-2xl sm:text-3xl tracking-tight leading-none">
+              <span class="text-gold-metallic">BLACK</span> <span class="text-silver-metallic">GALLO</span>
+            </h1>
+            <div class="mt-1 inline-block bg-gradient-to-r from-amber-500 via-yellow-300 to-amber-500 text-slate-950 font-display text-xs sm:text-sm px-4 py-0.5 rounded-full shadow-md transform -skew-x-6">
+              SIN PAJAS
+            </div>
+          </div>
+
+          <!-- Escudo BG Derecho -->
+          <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-amber-300 via-amber-500 to-amber-700 p-0.5 shadow-lg transform rotate-3">
+            <div class="w-full h-full bg-slate-950 rounded-[10px] flex flex-col items-center justify-center">
+              <span class="text-[8px] text-amber-400 leading-none">★</span>
+              <span class="font-display text-lg text-gold-metallic leading-none">BG</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mini barra de resumen en vivo -->
+        <div class="mt-2.5 pt-2 border-t border-blue-800/60 flex items-center justify-between text-[11px] text-blue-200">
+          <div class="flex items-center gap-1.5">
+            <span class="text-base">🐓</span>
+            <span id="resumen-dias-cumplidos" class="font-semibold text-amber-300">0 días Excelente</span>
+          </div>
+          <div id="resumen-promedio" class="font-semibold text-cyan-300">
+            Promedio Diario: 0%
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- CUADRÍCULA DE 30 DÍAS EN 5 COLUMNAS X 6 FILAS (COMO EL TABLERO FÍSICO) -->
+    <main>
+      <div class="flex items-center justify-between px-1 mb-1.5">
+        <span class="text-xs font-bold uppercase tracking-wider text-cyan-300 flex items-center gap-1">
+          📅 Tablero Mensual (30 Días)
+        </span>
+        <span class="text-[11px] text-blue-200/80">Toca un día para editar</span>
+      </div>
+
+      <section id="grid-dias" class="gold-board-border rounded-2xl bg-slate-900/90 p-1 grid grid-cols-5 gap-1 shadow-2xl">
+        <!-- Renderizado dinámicamente por la clase TableroVentas -->
+      </section>
+
+      <!-- PANEL INFERIOR DE METAS GLOBALES + TROFEO BG -->
+      <section class="mt-4">
+        <div class="flex items-center justify-between px-1 mb-1.5">
+          <span class="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1">
+            🏆 Metas Globales de Tienda
+          </span>
+          <span class="text-[11px] text-blue-200/80">Toca para actualizar</span>
+        </div>
+
+        <div class="flex items-stretch gap-2">
+          <!-- Trofeo Dorado BG (Izquierda como en el cartel) -->
+          <div class="hidden xs:flex sm:flex flex-col items-center justify-center w-20 rounded-2xl bg-gradient-to-b from-blue-950/90 to-slate-950/95 border-2 border-amber-400/70 p-2 shadow-lg flex-shrink-0">
+            <svg class="w-14 h-14 drop-shadow-md" viewBox="0 0 64 64" fill="none">
+              <path d="M18 12H46V26C46 33.732 39.732 40 32 40C24.268 40 18 33.732 18 26V12Z" fill="url(#trophyGold)" stroke="#78350f" stroke-width="2"/>
+              <path d="M18 16H11C11 23 14 27 18 27" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
+              <path d="M46 16H53C53 23 50 27 46 27" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
+              <rect x="28" y="40" width="8" height="10" fill="#d97706"/>
+              <path d="M20 50H44L47 56H17L20 50Z" fill="url(#trophyGold)" stroke="#78350f" stroke-width="1.5"/>
+              <text x="32" y="28" text-anchor="middle" fill="#0f172a" font-family="Russo One, sans-serif" font-size="11" font-weight="bold">BG</text>
+              <defs>
+                <linearGradient id="trophyGold" x1="18" y1="12" x2="46" y2="56" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#fef08a"/>
+                  <stop offset="0.5" stop-color="#f59e0b"/>
+                  <stop offset="1" stop-color="#92400e"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <span class="font-display text-[10px] text-amber-300 mt-1 text-center leading-tight">COPA<br>GALLO</span>
+          </div>
+
+          <!-- Lista de 4 Metas Globales -->
+          <div id="lista-metas-globales" class="flex-1 flex flex-col gap-2">
+            <!-- Renderizado dinámicamente por TableroVentas -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- PIE DE PÁGINA: IDENTIDAD DE TIENDA -->
+    <footer class="mt-5 text-center">
+      <div class="bg-gradient-to-r from-slate-950 via-blue-950 to-slate-950 border-y-2 border-amber-400 py-2.5 px-3 rounded-2xl shadow-xl">
+        <div class="flex items-center justify-center gap-2">
+          <span class="text-amber-400 text-sm">★</span>
+          <h2 class="font-display text-base sm:text-lg text-white tracking-wide">
+            T96 Jesus De Otoro
+          </h2>
+          <span class="text-amber-400 text-sm">★</span>
+        </div>
+        <p class="font-display text-lg sm:text-xl text-gold-metallic leading-tight mt-0.5">
+          Los mas Gallos 💪🐓
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 1: EDITAR DÍA DE VENTA (1 - 30)                                 -->
+  <!-- ===================================================================== -->
+  <div id="modal-dia" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm p-3">
+    <div class="w-full max-w-md bg-slate-900 border-2 border-amber-400 rounded-3xl p-5 shadow-2xl transform transition-all">
+      <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-4">
+        <div class="flex items-center gap-2.5">
+          <span id="modal-dia-badge" class="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 font-display text-xl flex items-center justify-center shadow">
+            1
+          </span>
+          <div>
+            <h3 class="font-display text-lg text-white">Registro del Día <span id="modal-dia-num">1</span></h3>
+            <p class="text-xs text-cyan-300">Instancia de clase <code class="text-amber-300">DiaVenta</code></p>
+          </div>
+        </div>
+        <button id="cerrar-modal-dia" class="w-9 h-9 rounded-full bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center text-lg font-bold">✕</button>
+      </div>
+
+      <form id="form-dia" class="space-y-4">
+        <!-- Input Meta ($) -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+            Meta del Día ($)
+          </label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-amber-400 font-bold">$</span>
+            <input type="number" id="input-dia-meta" min="0" step="1" placeholder="Ej: 1500"
+              class="w-full bg-slate-950 border border-slate-600 focus:border-amber-400 rounded-xl py-3 pl-8 pr-4 text-white font-bold text-lg outline-none" />
+          </div>
+        </div>
+
+        <!-- Input Venta Real ($) - Cuánto se hizo en el día -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-emerald-300 mb-1">
+            Venta Real / Cuánto hiciste ($)
+          </label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-emerald-400 font-bold">$</span>
+            <input type="number" id="input-dia-venta-real" min="0" step="1" placeholder="Ej: 1850"
+              class="w-full bg-slate-950 border border-slate-600 focus:border-emerald-400 rounded-xl py-3 pl-8 pr-4 text-emerald-300 font-bold text-lg outline-none" />
+          </div>
+        </div>
+
+        <!-- Input Logro (%) - Calculado automáticamente o editable -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300">
+              Porcentaje de Logro (%)
+            </label>
+            <span class="text-[10px] text-cyan-300/90">Auto-calculado o editable</span>
+          </div>
+          <div class="relative">
+            <input type="number" id="input-dia-logro" min="0" max="999" step="1" placeholder="Ej: 123"
+              class="w-full bg-slate-950 border border-slate-600 focus:border-cyan-400 rounded-xl py-3 pl-4 pr-8 text-cyan-300 font-bold text-lg outline-none" />
+            <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-cyan-400 font-bold">%</span>
+          </div>
+        </div>
+
+        <!-- Vista previa automática del Sticker/Insignia -->
+        <div id="preview-sticker-box" class="rounded-2xl bg-slate-950/90 border border-slate-700 p-3 flex items-center justify-between">
+          <div>
+            <span class="text-[11px] uppercase tracking-wider text-slate-400 block">Sticker Automático:</span>
+            <span id="preview-sticker-texto" class="font-display text-sm text-slate-300">Sin datos (Pendiente)</span>
+          </div>
+          <div id="preview-sticker-icono" class="text-2xl">⏳</div>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="flex items-center gap-2 pt-2">
+          <button type="button" id="btn-limpiar-dia" class="px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-red-300 font-bold text-sm transition">
+            Limpiar
+          </button>
+          <button type="submit" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 text-slate-950 font-display text-base shadow-lg active:scale-98 transition">
+            Guardar Día
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 2: EDITAR META GLOBAL (TOTAL, CRÉDITO, CONTADO, SG)             -->
+  <!-- ===================================================================== -->
+  <div id="modal-meta" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm p-3">
+    <div class="w-full max-w-md bg-slate-900 border-2 border-amber-400 rounded-3xl p-5 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-4">
+        <div>
+          <h3 id="modal-meta-titulo" class="font-display text-lg text-gold-metallic">Meta Total</h3>
+          <p class="text-xs text-cyan-300">Instancia de clase <code class="text-amber-300">MetaCategoria</code></p>
+        </div>
+        <button id="cerrar-modal-meta" class="w-9 h-9 rounded-full bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center text-lg font-bold">✕</button>
+      </div>
+
+      <form id="form-meta" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+            Monto Objetivo ($)
+          </label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-amber-400 font-bold">$</span>
+            <input type="number" id="input-meta-monto" min="0" step="1" required
+              class="w-full bg-slate-950 border border-slate-600 focus:border-amber-400 rounded-xl py-3 pl-8 pr-4 text-white font-bold text-lg outline-none" />
+          </div>
+        </div>
+
+        <!-- Campo editable solo para metas manuales (Crédito, Contado, SG) -->
+        <div id="grupo-meta-logro-manual">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1">
+            Porcentaje de Logro Actual (%)
+          </label>
+          <div class="relative">
+            <input type="number" id="input-meta-logro" min="0" max="999" step="1" required
+              class="w-full bg-slate-950 border border-slate-600 focus:border-cyan-400 rounded-xl py-3 pl-4 pr-8 text-cyan-300 font-bold text-lg outline-none" />
+            <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-cyan-400 font-bold">%</span>
+          </div>
+        </div>
+
+        <!-- Panel informativo cuando se abre Meta Total (calculada automáticamente) -->
+        <div id="grupo-meta-total-auto" class="hidden rounded-2xl bg-slate-950 border border-cyan-500/40 p-3.5 space-y-1.5">
+          <div class="flex items-center justify-between text-xs">
+            <span class="text-slate-400">Acumulado vendido (30 días):</span>
+            <span id="info-acumulado-total" class="font-display text-sm text-emerald-400">$0</span>
+          </div>
+          <div class="flex items-center justify-between text-xs">
+            <span class="text-slate-400">Logro General Calculado:</span>
+            <span id="info-porcentaje-total" class="font-display text-sm text-amber-300">0%</span>
+          </div>
+          <p class="text-[11px] text-cyan-300/90 pt-1 border-t border-slate-800">
+            Este porcentaje suma automáticamente cada día registrado en el tablero.
+          </p>
+        </div>
+
+        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 text-slate-950 font-display text-base shadow-lg">
+          Actualizar Meta Global
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 3: INSPECTOR DE ARQUITECTURA POO (CLASES Y DIAGRAMA)            -->
+  <!-- ===================================================================== -->
+  <div id="modal-poo" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/85 backdrop-blur-sm p-3">
+    <div class="w-full max-w-lg max-h-[88vh] flex flex-col bg-slate-900 border-2 border-cyan-400 rounded-3xl p-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-3">
+        <div>
+          <h3 class="font-display text-base sm:text-lg text-cyan-300">Arquitectura Orientada a Objetos</h3>
+          <p class="text-xs text-slate-400">Clases activas controlando el tablero y la suma general</p>
+        </div>
+        <button id="cerrar-modal-poo" class="w-9 h-9 rounded-full bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center text-lg font-bold">✕</button>
+      </div>
+
+      <div class="overflow-y-auto space-y-3 pr-1 text-xs">
+        <!-- Diagrama UML -->
+        <div class="bg-slate-950 border border-blue-500/40 rounded-2xl p-3">
+          <div class="font-bold text-amber-300 mb-1.5">📐 Diagrama de Clases (UML)</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 font-mono text-[11px]">
+            <div class="bg-slate-900 p-2 rounded-xl border border-slate-700">
+              <div class="text-cyan-400 font-bold border-b border-slate-700 pb-1 mb-1">TableroVentas</div>
+              <div class="text-slate-300">+ tienda: string</div>
+              <div class="text-slate-300">+ dias: DiaVenta[]</div>
+              <div class="text-slate-300">+ metas: MetaCategoria[]</div>
+              <div class="text-emerald-400 mt-1">+ actualizarPorcentajeMetaGeneral()</div>
+              <div class="text-emerald-400">+ renderizar()</div>
+            </div>
+            <div class="bg-slate-900 p-2 rounded-xl border border-slate-700">
+              <div class="text-amber-400 font-bold border-b border-slate-700 pb-1 mb-1">DiaVenta</div>
+              <div class="text-slate-300">+ numero: number</div>
+              <div class="text-slate-300">+ meta: number</div>
+              <div class="text-slate-300">+ logroPorcentaje: number</div>
+              <div class="text-emerald-400 mt-1">+ calcularVentaReal()</div>
+              <div class="text-emerald-400">+ calcularLogroDesdeVenta(venta)</div>
+              <div class="text-emerald-400">+ obtenerInsignia()</div>
+            </div>
+            <div class="bg-slate-900 p-2 rounded-xl border border-slate-700">
+              <div class="text-purple-400 font-bold border-b border-slate-700 pb-1 mb-1">MetaCategoria</div>
+              <div class="text-slate-300">+ id: string</div>
+              <div class="text-slate-300">+ nombre: string</div>
+              <div class="text-slate-300">+ montoObjetivo: number</div>
+              <div class="text-slate-300">+ logroPorcentaje: number</div>
+              <div class="text-slate-300">+ esCalculadaAutomatica: bool</div>
+            </div>
+            <div class="bg-slate-900 p-2 rounded-xl border border-slate-700">
+              <div class="text-emerald-400 font-bold border-b border-slate-700 pb-1 mb-1">GestorAlmacenamiento</div>
+              <div class="text-slate-300">- claveStorage: string</div>
+              <div class="text-emerald-400 mt-1">+ guardar(estado) / cargar()</div>
+              <div class="text-emerald-400">+ exportarJSON()</div>
+              <div class="text-emerald-400">+ importarJSON(texto)</div>
+            </div>
+            <div class="bg-slate-900 p-2 rounded-xl border border-slate-700 sm:col-span-2">
+              <div class="text-pink-400 font-bold border-b border-slate-700 pb-1 mb-1">InstaladorPWA (Progressive Web App)</div>
+              <div class="text-slate-300">+ eventoDiferido: BeforeInstallPromptEvent</div>
+              <div class="text-emerald-400 mt-1">+ generarIconoSVG() / configurarManifiesto() / registrarServiceWorker() / instalar()</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Extracto de código real -->
+        <div class="bg-slate-950 border border-slate-700 rounded-2xl p-3">
+          <div class="font-bold text-cyan-300 mb-1">💻 InstaladorPWA &amp; Respaldo Orientado a Objetos</div>
+          <pre class="text-[11px] text-slate-300 overflow-x-auto leading-relaxed"><code>class InstaladorPWA {
+  constructor(botonId) {
+    this.boton = document.getElementById(botonId);
+    this.eventoDiferido = null;
+    this.configurarManifiesto();
+    this.registrarServiceWorker();
+    this.escucharEventosInstalacion();
+  }
+
+  async instalar() {
+    if (!this.eventoDiferido) return false;
+    this.eventoDiferido.prompt();
+    const { outcome } = await this.eventoDiferido.userChoice;
+    this.eventoDiferido = null;
+    return outcome === 'accepted';
+  }
+}
+
+class GestorAlmacenamiento {
+  exportarJSON() {
+    return JSON.stringify(this.cargar() || {}, null, 2);
+  }
+  importarJSON(textoJSON) {
+    const parsed = JSON.parse(textoJSON);
+    if (!Array.isArray(parsed.dias) || !Array.isArray(parsed.metas)) {
+      throw new Error('Formato de respaldo inválido');
+    }
+    this.guardar(parsed);
+    return parsed;
+  }
+}</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 4: RESPALDO Y RESTAURACIÓN DE DATOS (EXPORTAR / IMPORTAR)       -->
+  <!-- ===================================================================== -->
+  <div id="modal-respaldo" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center bg-black/85 backdrop-blur-sm p-3">
+    <div class="w-full max-w-md bg-slate-900 border-2 border-cyan-400 rounded-3xl p-5 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-3">
+        <div>
+          <h3 class="font-display text-lg text-cyan-300">Respaldo de Datos</h3>
+          <p class="text-xs text-slate-400">Clase <code class="text-amber-300">GestorAlmacenamiento</code> · Exportar / Importar</p>
+        </div>
+        <button id="cerrar-modal-respaldo" class="w-9 h-9 rounded-full bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center text-lg font-bold">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <p class="text-slate-300 leading-relaxed">
+          Copia o descarga este código para guardar todos tus días registrados si cambias de teléfono o abres la app desde otro enlace.
+        </p>
+
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label for="textarea-respaldo" class="font-bold uppercase tracking-wider text-amber-300">Código JSON del Tablero:</label>
+            <button type="button" id="btn-copiar-respaldo" class="text-[11px] font-bold bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-400/50 px-2.5 py-0.5 rounded-full transition">
+              📋 Copiar Texto
+            </button>
+          </div>
+          <textarea id="textarea-respaldo" rows="5" placeholder="Pega aquí el código JSON respaldado..."
+            class="w-full bg-slate-950 border border-slate-700 focus:border-cyan-400 rounded-xl p-2.5 font-mono text-[11px] text-emerald-300 outline-none"></textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 pt-1">
+          <button type="button" id="btn-descargar-json" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-bold flex items-center justify-center gap-1.5 transition">
+            <span>⬇️</span> Descargar .json
+          </button>
+          <button type="button" id="btn-importar-json" class="py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 text-slate-950 font-display text-xs flex items-center justify-center gap-1.5 shadow-lg transition">
+            <span>📥</span> Restaurar Datos
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFICACIÓN TOAST FLOTANTE -->
+  <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 hidden bg-slate-900 border border-amber-400 text-white text-xs font-bold px-4 py-2.5 rounded-full shadow-2xl items-center gap-2">
+    <span id="toast-icon">🐓</span>
+    <span id="toast-msg">Guardado correctamente</span>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- ARQUITECTURA ORIENTADA A OBJETOS (JAVASCRIPT ES6+ CLASSES)            -->
+  <!-- ===================================================================== -->
+  <script>
+    /**
+     * CLASE 1: DiaVenta
+     * Representa cada una de las 30 casillas diarias del tablero.
+     * Encapsula número, meta, logroPorcentaje, cálculo de venta real e insignia.
+     */
+    class DiaVenta {
+      constructor(numero, meta = 0, logroPorcentaje = 0) {
+        this.numero = Number(numero);
+        this.meta = Number(meta) || 0;
+        this.logroPorcentaje = Number(logroPorcentaje) || 0;
+      }
+
+      /**
+       * Determina si el día ya tiene registros cargados
+       */
+      get tieneDatos() {
+        return this.meta > 0 || this.logroPorcentaje > 0;
+      }
+
+      /**
+       * Calcula la venta real en dólares del día: meta * (logroPorcentaje / 100)
+       */
+      calcularVentaReal() {
+        if (this.meta <= 0 || this.logroPorcentaje <= 0) {
+          return 0;
+        }
+        return this.meta * (this.logroPorcentaje / 100);
+      }
+
+      /**
+       * Calcula el porcentaje de logro a partir de la meta y la venta real ($) ingresada
+       */
+      calcularLogroDesdeVenta(ventaReal) {
+        const venta = Number(ventaReal) || 0;
+        if (this.meta <= 0 || venta <= 0) {
+          return 0;
+        }
+        return Math.round((venta / this.meta) * 100);
+      }
+
+      /**
+       * Devuelve el sticker según rendimiento:
+       * >= 100% -> Sticker Dorado "Excelente"
+       * < 100%  -> Sticker Azul "¡Ánimo!"
+       * Sin datos -> Pendiente
+       */
+      obtenerInsignia() {
+        if (!this.tieneDatos) {
+          return {
+            estado: 'PENDIENTE',
+            titulo: 'Pendiente',
+            subtitulo: 'Toca para registrar'
+          };
+        }
+
+        if (this.logroPorcentaje >= 100) {
+          return {
+            estado: 'EXCELENTE',
+            titulo: 'Excelente',
+            subtitulo: 'Lo logramos'
+          };
+        }
+
+        return {
+          estado: 'ANIMO',
+          titulo: '¡Ánimo!',
+          subtitulo: 'Tú puedes'
+        };
+      }
+
+      toJSON() {
+        return {
+          numero: this.numero,
+          meta: this.meta,
+          logroPorcentaje: this.logroPorcentaje
+        };
+      }
+    }
+
+    /**
+     * CLASE 2: MetaCategoria
+     * Representa cada barra de meta global en la parte inferior del tablero:
+     * Meta Total (calculada automáticamente), Meta Crédito, Meta Contado y Meta SG.
+     */
+    class MetaCategoria {
+      constructor(id, nombre, montoObjetivo = 0, logroPorcentaje = 0, esCalculadaAutomatica = false) {
+        this.id = id;
+        this.nombre = nombre;
+        this.montoObjetivo = Number(montoObjetivo) || 0;
+        this.logroPorcentaje = Number(logroPorcentaje) || 0;
+        this.esCalculadaAutomatica = Boolean(esCalculadaAutomatica);
+      }
+
+      /**
+       * Formatea el monto objetivo con separador de miles ($46,000)
+       */
+      obtenerMontoFormateado() {
+        return '$' + this.montoObjetivo.toLocaleString('en-US');
+      }
+
+      toJSON() {
+        return {
+          id: this.id,
+          nombre: this.nombre,
+          montoObjetivo: this.montoObjetivo,
+          logroPorcentaje: this.logroPorcentaje,
+          esCalculadaAutomatica: this.esCalculadaAutomatica
+        };
+      }
+    }
+
+    /**
+     * CLASE 3: GestorAlmacenamiento
+     * Gestiona la persistencia local (localStorage) bajo la clave black_gallo_t96_v3,
+     * además de exportar e importar copias de seguridad en formato JSON.
+     */
+    class GestorAlmacenamiento {
+      constructor(claveStorage = 'black_gallo_t96_v3') {
+        this.claveStorage = claveStorage;
+      }
+
+      guardar(datos) {
+        try {
+          localStorage.setItem(this.claveStorage, JSON.stringify(datos));
+          return true;
+        } catch (error) {
+          console.error('Error al guardar en localStorage:', error);
+          return false;
+        }
+      }
+
+      cargar() {
+        try {
+          const raw = localStorage.getItem(this.claveStorage);
+          return raw ? JSON.parse(raw) : null;
+        } catch (error) {
+          console.error('Error al leer localStorage:', error);
+          return null;
+        }
+      }
+
+      limpiar() {
+        try {
+          localStorage.removeItem(this.claveStorage);
+        } catch (error) {
+          console.error('Error al limpiar localStorage:', error);
+        }
+      }
+
+      /**
+       * Serializa el estado actual en un string JSON legible para respaldo
+       */
+      exportarJSON(estadoActual = null) {
+        const datos = estadoActual || this.cargar() || {};
+        return JSON.stringify(datos, null, 2);
+      }
+
+      /**
+       * Valida y restaura un respaldo JSON importado por el usuario
+       */
+      importarJSON(textoJSON) {
+        const parsed = JSON.parse(textoJSON);
+        if (!parsed || !Array.isArray(parsed.dias) || !Array.isArray(parsed.metas)) {
+          throw new Error('El texto JSON no contiene una estructura válida de Black Gallo.');
+        }
+        this.guardar(parsed);
+        return parsed;
+      }
+    }
+
+    /**
+     * CLASE 4: InstaladorPWA
+     * Encapsula la configuración de Progressive Web App (Manifest dinámico,
+     * ícono SVG personalizado del gallo BG, Service Worker offline y evento de instalación).
+     */
+    class InstaladorPWA {
+      constructor(botonId = 'btn-instalar-pwa', onNotificar = null) {
+        this.boton = document.getElementById(botonId);
+        this.onNotificar = typeof onNotificar === 'function' ? onNotificar : () => {};
+        this.eventoDiferido = null;
+
+        this.configurarManifiesto();
+        this.registrarServiceWorker();
+        this.escucharEventosInstalacion();
+      }
+
+      /**
+       * Genera un ícono SVG vectorial de alta resolución del escudo Black Gallo
+       */
+      generarIconoDataURL() {
+        const svg = `
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <defs>
+              <radialGradient id="bgGrad" cx="50%" cy="40%" r="60%">
+                <stop offset="0%" stop-color="#0a2463"/>
+                <stop offset="100%" stop-color="#030a1c"/>
+              </radialGradient>
+              <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#fef08a"/>
+                <stop offset="50%" stop-color="#f59e0b"/>
+                <stop offset="100%" stop-color="#92400e"/>
+              </linearGradient>
+            </defs>
+            <rect width="512" height="512" rx="112" fill="url(#bgGrad)"/>
+            <rect x="24" y="24" width="464" height="464" rx="92" fill="none" stroke="url(#goldGrad)" stroke-width="18"/>
+            <path d="M146 155 L176 95 L226 135 L256 80 L286 135 L336 95 L366 155 Z" fill="url(#goldGrad)"/>
+            <text x="256" y="305" text-anchor="middle" font-family="Arial Black, sans-serif" font-weight="900" font-size="168" fill="url(#goldGrad)">BG</text>
+            <text x="256" y="375" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="40" fill="#38bdf8" letter-spacing="4">SIN PAJAS</text>
+            <text x="256" y="425" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="26" fill="#fef08a">T96 JESÚS DE OTORO</text>
+          </svg>
+        `.trim();
+        return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+      }
+
+      /**
+       * Inyecta dinámicamente el Web App Manifest para Android / Chrome
+       */
+      configurarManifiesto() {
+        try {
+          const iconoURL = this.generarIconoDataURL();
+          const appleLink = document.getElementById('pwa-apple-icon');
+          if (appleLink) appleLink.href = iconoURL;
+
+          const startUrl = window.location.protocol.startsWith('http')
+            ? window.location.href
+            : './index.html';
+
+          const manifest = {
+            name: 'Black Gallo - Sin Pajas | T96 Jesús De Otoro',
+            short_name: 'Black Gallo',
+            description: 'Tablero de metas diarias y logro mensual T96 Jesús De Otoro - Los más Gallos',
+            start_url: startUrl,
+            display: 'standalone',
+            orientation: 'portrait',
+            background_color: '#030a1c',
+            theme_color: '#040d21',
+            icons: [
+              {
+                src: iconoURL,
+                sizes: '192x192',
+                type: 'image/svg+xml',
+                purpose: 'any maskable'
+              },
+              {
+                src: iconoURL,
+                sizes: '512x512',
+                type: 'image/svg+xml',
+                purpose: 'any maskable'
+              }
+            ]
+          };
+
+          const blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+          const manifestURL = URL.createObjectURL(blob);
+          const manifestLink = document.getElementById('pwa-manifest-link');
+          if (manifestLink) {
+            manifestLink.href = manifestURL;
+          }
+        } catch (error) {
+          console.warn('No se pudo configurar el manifiesto PWA:', error);
+        }
+      }
+
+      /**
+       * Registra un Service Worker ligero mediante Blob URL cuando se ejecuta sobre HTTPS/localhost
+       */
+      registrarServiceWorker() {
+        if (!('serviceWorker' in navigator)) return;
+        if (!window.location.protocol.startsWith('http')) return;
+
+        try {
+          const swCodigo = `
+            const CACHE_NAME = 'black-gallo-t96-v1';
+            self.addEventListener('install', (event) => {
+              self.skipWaiting();
+            });
+            self.addEventListener('activate', (event) => {
+              event.waitUntil(self.clients.claim());
+            });
+            self.addEventListener('fetch', (event) => {
+              event.respondWith(
+                fetch(event.request)
+                  .then((respuesta) => {
+                    const copia = respuesta.clone();
+                    caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copia)).catch(() => {});
+                    return respuesta;
+                  })
+                  .catch(() => caches.match(event.request))
+              );
+            });
+          `;
+          const swBlob = new Blob([swCodigo], { type: 'application/javascript' });
+          const swURL = URL.createObjectURL(swBlob);
+          navigator.serviceWorker.register(swURL).catch(() => {});
+        } catch (error) {
+          console.warn('Registro de Service Worker omitido:', error);
+        }
+      }
+
+      /**
+       * Captura el evento nativo de instalación en Chrome Android y muestra el botón
+       */
+      escucharEventosInstalacion() {
+        window.addEventListener('beforeinstallprompt', (e) => {
+          e.preventDefault();
+          this.eventoDiferido = e;
+          if (this.boton) {
+            this.boton.classList.remove('hidden');
+            this.boton.classList.add('inline-flex');
+          }
+        });
+
+        window.addEventListener('appinstalled', () => {
+          this.eventoDiferido = null;
+          if (this.boton) {
+            this.boton.classList.add('hidden');
+            this.boton.classList.remove('inline-flex');
+          }
+          this.onNotificar('¡App Black Gallo instalada en tu teléfono!', '📲');
+        });
+
+        if (this.boton) {
+          this.boton.addEventListener('click', () => this.instalar());
+        }
+      }
+
+      async instalar() {
+        if (!this.eventoDiferido) {
+          this.onNotificar('Usa el menú ⋮ de Chrome → "Instalar aplicación"', '📲');
+          return false;
+        }
+        this.eventoDiferido.prompt();
+        const resultado = await this.eventoDiferido.userChoice;
+        this.eventoDiferido = null;
+        if (resultado.outcome === 'accepted' && this.boton) {
+          this.boton.classList.add('hidden');
+          this.boton.classList.remove('inline-flex');
+        }
+        return resultado.outcome === 'accepted';
+      }
+    }
+
+    /**
+     * CLASE 5: TableroVentas (Controlador Principal)
+     * Orquesta los 30 objetos DiaVenta, los 4 objetos MetaCategoria,
+     * el cálculo automático de la Meta General, el InstaladorPWA y la interfaz móvil.
+     */
+    class TableroVentas {
+      constructor(tiendaNombre) {
+        this.tiendaNombre = tiendaNombre;
+        this.storage = new GestorAlmacenamiento('black_gallo_t96_v3');
+        this.pwa = new InstaladorPWA('btn-instalar-pwa', (msg, ico) => this.mostrarToast(msg, ico));
+        this.dias = [];
+        this.metas = [];
+        this.diaSeleccionado = null;
+        this.metaSeleccionada = null;
+
+        this.inicializarDatos();
+        this.vincularEventos();
+        this.renderizar();
+      }
+
+      /**
+       * Carga los datos guardados o inicializa exactamente con los valores de la fotografía
+       */
+      inicializarDatos() {
+        const guardado = this.storage.cargar();
+
+        if (guardado && Array.isArray(guardado.dias) && Array.isArray(guardado.metas)) {
+          this.dias = guardado.dias.map(d => new DiaVenta(d.numero, d.meta, d.logroPorcentaje));
+          this.metas = guardado.metas.map(m => new MetaCategoria(
+            m.id,
+            m.nombre,
+            m.montoObjetivo,
+            m.logroPorcentaje,
+            m.id === 'total' || m.esCalculadaAutomatica
+          ));
+          this.actualizarPorcentajeMetaGeneral();
+          return;
+        }
+
+        // Datos exactos extraídos de la fotografía del tablero físico T96 Jesús De Otoro
+        const datosInicialesDias = {
+          1:  { meta: 0,    logro: 0 },
+          2:  { meta: 1823, logro: 81 },
+          3:  { meta: 1243, logro: 167 },
+          4:  { meta: 1226, logro: 116 },
+          5:  { meta: 1337, logro: 154 },
+          6:  { meta: 1393, logro: 44 },
+          7:  { meta: 1739, logro: 196 },
+          8:  { meta: 0,    logro: 0 },
+          9:  { meta: 2103, logro: 158 },
+          10: { meta: 1340, logro: 134 },
+          11: { meta: 1276, logro: 55 },
+          12: { meta: 1493, logro: 83 }
+        };
+
+        this.dias = [];
+        for (let i = 1; i <= 30; i++) {
+          const registro = datosInicialesDias[i] || { meta: 0, logro: 0 };
+          this.dias.push(new DiaVenta(i, registro.meta, registro.logro));
+        }
+
+        // Metas Globales inferiores de la imagen (Meta Total calculada automáticamente)
+        this.metas = [
+          new MetaCategoria('total',   'Meta Total:',   46000, 38, true),
+          new MetaCategoria('credito', 'Meta Credito:', 18000, 49, false),
+          new MetaCategoria('contado', 'Meta Contado:', 28000, 35, false),
+          new MetaCategoria('sg',      'Meta SG:',      7282,  49, false)
+        ];
+
+        this.actualizarPorcentajeMetaGeneral();
+        this.persistir();
+      }
+
+      /**
+       * Suma lo vendido real de todos los días activos y actualiza el porcentaje
+       * de logro de la Meta Total ($46,000) automáticamente.
+       */
+      actualizarPorcentajeMetaGeneral() {
+        const ventaAcumulada = this.calcularVentaAcumuladaTotal();
+        const metaTotal = this.metas.find(m => m.id === 'total');
+
+        if (metaTotal) {
+          if (metaTotal.montoObjetivo > 0) {
+            metaTotal.logroPorcentaje = Math.round((ventaAcumulada / metaTotal.montoObjetivo) * 100);
+          } else {
+            metaTotal.logroPorcentaje = 0;
+          }
+        }
+      }
+
+      /**
+       * Devuelve la suma en dólares ($) de lo vendido real en todos los días del tablero
+       */
+      calcularVentaAcumuladaTotal() {
+        return this.dias.reduce((suma, dia) => suma + dia.calcularVentaReal(), 0);
+      }
+
+      persistir() {
+        this.actualizarPorcentajeMetaGeneral();
+        this.storage.guardar({
+          dias: this.dias.map(d => d.toJSON()),
+          metas: this.metas.map(m => m.toJSON())
+        });
+      }
+
+      restaurarValoresOriginales() {
+        this.storage.limpiar();
+        this.inicializarDatos();
+        this.renderizar();
+        this.mostrarToast('Tablero restaurado según la imagen original', '🔄');
+      }
+
+      /**
+       * Genera el sticker compacto del Gallo (Excelente vs ¡Ánimo!) como en la primera versión
+       */
+      generarStickerHTML(insignia) {
+        if (insignia.estado === 'PENDIENTE') {
+          return '';
+        }
+
+        if (insignia.estado === 'EXCELENTE') {
+          return `
+            <div class="mt-1 rounded-md bg-gradient-to-b from-amber-300 via-amber-500 to-amber-700 p-[1.5px] shadow">
+              <div class="bg-slate-950 rounded-[4px] px-1 py-0.5 flex items-center justify-between gap-0.5">
+                <span class="text-[10px] leading-none">🐓</span>
+                <div class="leading-none text-right flex-1 overflow-hidden">
+                  <div class="text-[7px] font-black text-amber-300 uppercase tracking-tighter truncate">Excelente</div>
+                  <div class="text-[6px] text-amber-100/90 truncate">Lo logramos</div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="mt-1 rounded-md bg-gradient-to-b from-cyan-300 via-blue-500 to-blue-800 p-[1.5px] shadow">
+            <div class="bg-slate-950 rounded-[4px] px-1 py-0.5 flex items-center justify-between gap-0.5">
+              <span class="text-[10px] leading-none">💪</span>
+              <div class="leading-none text-right flex-1 overflow-hidden">
+                <div class="text-[7px] font-black text-cyan-300 uppercase tracking-tighter truncate">¡Ánimo!</div>
+                <div class="text-[6px] text-blue-200 truncate">Tú puedes</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      /**
+       * Renderiza toda la interfaz gráfica
+       */
+      renderizar() {
+        this.actualizarPorcentajeMetaGeneral();
+        this.renderizarDias();
+        this.renderizarMetasGlobales();
+        this.actualizarEstadisticas();
+      }
+
+      renderizarDias() {
+        const contenedor = document.getElementById('grid-dias');
+        contenedor.innerHTML = '';
+
+        this.dias.forEach(dia => {
+          const insignia = dia.obtenerInsignia();
+          const card = document.createElement('button');
+          card.type = 'button';
+          card.className = 'day-cell rounded-lg p-1 text-left flex flex-col justify-between min-h-[78px] relative overflow-hidden shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-400';
+          card.setAttribute('aria-label', `Editar día ${dia.numero}`);
+
+          const colorLogro = !dia.tieneDatos
+            ? 'text-slate-400'
+            : dia.logroPorcentaje >= 100
+              ? 'text-emerald-700 font-black'
+              : 'text-rose-700 font-extrabold';
+
+          card.innerHTML = `
+            <div class="flex items-center justify-between w-full">
+              <span class="font-display text-xs sm:text-sm text-slate-900 leading-none">${dia.numero}</span>
+              ${dia.tieneDatos ? `<span class="w-1.5 h-1.5 rounded-full ${dia.logroPorcentaje >= 100 ? 'bg-amber-500' : 'bg-blue-500'}"></span>` : ''}
+            </div>
+
+            ${dia.tieneDatos ? `
+              <div class="mt-0.5 leading-tight">
+                <div class="text-[8.5px] sm:text-[9.5px] text-slate-700 font-semibold truncate">
+                  Meta: <span class="text-slate-950 font-bold">$${dia.meta.toLocaleString('en-US')}</span>
+                </div>
+                <div class="text-[8.5px] sm:text-[9.5px] text-slate-700 font-semibold truncate">
+                  Logro: <span class="${colorLogro}">${dia.logroPorcentaje}%</span>
+                </div>
+              </div>
+              ${this.generarStickerHTML(insignia)}
+            ` : `
+              <div class="my-auto text-center">
+                <span class="text-[9px] font-medium text-slate-400">—</span>
+              </div>
+            `}
+          `;
+
+          card.addEventListener('click', () => this.abrirModalDia(dia));
+          contenedor.appendChild(card);
+        });
+      }
+
+      renderizarMetasGlobales() {
+        const contenedor = document.getElementById('lista-metas-globales');
+        contenedor.innerHTML = '';
+
+        this.metas.forEach(meta => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'meta-bar rounded-xl px-3 py-2 flex items-center justify-between gap-2 text-left active:scale-[0.99] transition';
+
+          const badgeColor = meta.logroPorcentaje >= 100
+            ? 'bg-emerald-400 text-slate-950'
+            : 'bg-white text-slate-950';
+
+          btn.innerHTML = `
+            <div class="flex items-center justify-between flex-1 gap-2">
+              <span class="text-xs sm:text-sm font-bold italic text-amber-200 whitespace-nowrap">${meta.nombre}</span>
+              <span class="font-display text-sm sm:text-base text-white tracking-wide">${meta.obtenerMontoFormateado()}</span>
+            </div>
+            <div class="flex items-center gap-1.5 pl-2 border-l border-amber-500/40">
+              <span class="${badgeColor} font-display text-xs px-2 py-0.5 rounded-md shadow-inner min-w-[44px] text-center">
+                ${meta.logroPorcentaje}%
+              </span>
+              <span class="text-[11px] font-bold italic text-amber-300">Logro:</span>
+            </div>
+          `;
+
+          btn.addEventListener('click', () => this.abrirModalMeta(meta));
+          contenedor.appendChild(btn);
+        });
+      }
+
+      actualizarEstadisticas() {
+        const diasConDatos = this.dias.filter(d => d.tieneDatos);
+        const diasExcelentes = diasConDatos.filter(d => d.logroPorcentaje >= 100).length;
+        const promedio = diasConDatos.length > 0
+          ? Math.round(diasConDatos.reduce((acc, d) => acc + d.logroPorcentaje, 0) / diasConDatos.length)
+          : 0;
+
+        document.getElementById('resumen-dias-cumplidos').textContent =
+          `${diasExcelentes} día${diasExcelentes === 1 ? '' : 's'} Excelente`;
+        document.getElementById('resumen-promedio').textContent =
+          `Promedio Diario: ${promedio}%`;
+      }
+
+      /* -------------------- GESTIÓN DE MODALES -------------------- */
+
+      abrirModalDia(dia) {
+        this.diaSeleccionado = dia;
+        document.getElementById('modal-dia-badge').textContent = dia.numero;
+        document.getElementById('modal-dia-num').textContent = dia.numero;
+        document.getElementById('input-dia-meta').value = dia.meta > 0 ? dia.meta : '';
+        document.getElementById('input-dia-logro').value = dia.logroPorcentaje > 0 ? dia.logroPorcentaje : '';
+
+        const ventaRealInicial = Math.round(dia.calcularVentaReal());
+        document.getElementById('input-dia-venta-real').value = ventaRealInicial > 0 ? ventaRealInicial : '';
+
+        this.actualizarPreviewSticker();
+        const modal = document.getElementById('modal-dia');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+
+      cerrarModalDia() {
+        const modal = document.getElementById('modal-dia');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        this.diaSeleccionado = null;
+      }
+
+      /**
+       * Sincroniza los campos Meta ($), Venta Real ($) y Logro (%) en tiempo real
+       * utilizando los métodos de la clase DiaVenta.
+       */
+      sincronizarCamposDia(origen) {
+        const inputMeta = document.getElementById('input-dia-meta');
+        const inputVenta = document.getElementById('input-dia-venta-real');
+        const inputLogro = document.getElementById('input-dia-logro');
+
+        const meta = Number(inputMeta.value) || 0;
+        const venta = Number(inputVenta.value) || 0;
+        const logro = Number(inputLogro.value) || 0;
+
+        const diaTemp = new DiaVenta(0, meta, logro);
+
+        if (origen === 'venta') {
+          // El usuario escribió cuánto hizo ($): calculamos el porcentaje automáticamente
+          const nuevoLogro = diaTemp.calcularLogroDesdeVenta(venta);
+          inputLogro.value = meta > 0 && venta > 0 ? nuevoLogro : '';
+        } else if (origen === 'logro') {
+          // El usuario escribió el porcentaje (%): calculamos la venta real ($)
+          const nuevaVenta = Math.round(diaTemp.calcularVentaReal());
+          inputVenta.value = meta > 0 && logro > 0 ? nuevaVenta : '';
+        } else if (origen === 'meta') {
+          // Si cambió la meta y ya había venta real escrita, recalculamos el %
+          if (venta > 0) {
+            const nuevoLogro = diaTemp.calcularLogroDesdeVenta(venta);
+            inputLogro.value = meta > 0 ? nuevoLogro : '';
+          } else if (logro > 0) {
+            const nuevaVenta = Math.round(diaTemp.calcularVentaReal());
+            inputVenta.value = meta > 0 ? nuevaVenta : '';
+          }
+        }
+
+        this.actualizarPreviewSticker();
+      }
+
+      actualizarPreviewSticker() {
+        const meta = Number(document.getElementById('input-dia-meta').value) || 0;
+        const logro = Number(document.getElementById('input-dia-logro').value) || 0;
+        const diaTemp = new DiaVenta(0, meta, logro);
+        const insignia = diaTemp.obtenerInsignia();
+
+        const textoEl = document.getElementById('preview-sticker-texto');
+        const iconoEl = document.getElementById('preview-sticker-icono');
+
+        if (insignia.estado === 'PENDIENTE') {
+          textoEl.textContent = 'Sin datos (Pendiente)';
+          textoEl.className = 'font-display text-sm text-slate-400';
+          iconoEl.textContent = '⏳';
+        } else if (insignia.estado === 'EXCELENTE') {
+          textoEl.textContent = '¡Excelente! Lo logramos (Gallo Dorado)';
+          textoEl.className = 'font-display text-sm text-amber-300';
+          iconoEl.textContent = '🐓🏆';
+        } else {
+          textoEl.textContent = '¡Ánimo! Tú puedes (Gallo Motivador)';
+          textoEl.className = 'font-display text-sm text-cyan-300';
+          iconoEl.textContent = '💪🐓';
+        }
+      }
+
+      abrirModalMeta(meta) {
+        this.metaSeleccionada = meta;
+        document.getElementById('modal-meta-titulo').textContent = meta.nombre.replace(':', '');
+        document.getElementById('input-meta-monto').value = meta.montoObjetivo;
+        document.getElementById('input-meta-logro').value = meta.logroPorcentaje;
+
+        const grupoManual = document.getElementById('grupo-meta-logro-manual');
+        const grupoAuto = document.getElementById('grupo-meta-total-auto');
+        const inputLogro = document.getElementById('input-meta-logro');
+
+        if (meta.esCalculadaAutomatica) {
+          grupoManual.classList.add('hidden');
+          grupoAuto.classList.remove('hidden');
+          inputLogro.required = false;
+
+          const acumulado = Math.round(this.calcularVentaAcumuladaTotal());
+          document.getElementById('info-acumulado-total').textContent = `$${acumulado.toLocaleString('en-US')}`;
+          document.getElementById('info-porcentaje-total').textContent = `${meta.logroPorcentaje}%`;
+        } else {
+          grupoManual.classList.remove('hidden');
+          grupoAuto.classList.add('hidden');
+          inputLogro.required = true;
+        }
+
+        const modal = document.getElementById('modal-meta');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+
+      cerrarModalMeta() {
+        const modal = document.getElementById('modal-meta');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        this.metaSeleccionada = null;
+      }
+
+      mostrarToast(mensaje, icono = '🐓') {
+        const toast = document.getElementById('toast');
+        document.getElementById('toast-msg').textContent = mensaje;
+        document.getElementById('toast-icon').textContent = icono;
+        toast.classList.remove('hidden');
+        toast.classList.add('flex');
+
+        clearTimeout(this.toastTimer);
+        this.toastTimer = setTimeout(() => {
+          toast.classList.add('hidden');
+          toast.classList.remove('flex');
+        }, 2500);
+      }
+
+      vincularEventos() {
+        // Eventos del Modal Día (sincronización bidireccional Meta <-> Venta Real <-> Logro %)
+        document.getElementById('cerrar-modal-dia').addEventListener('click', () => this.cerrarModalDia());
+        document.getElementById('input-dia-meta').addEventListener('input', () => this.sincronizarCamposDia('meta'));
+        document.getElementById('input-dia-venta-real').addEventListener('input', () => this.sincronizarCamposDia('venta'));
+        document.getElementById('input-dia-logro').addEventListener('input', () => this.sincronizarCamposDia('logro'));
+
+        document.getElementById('btn-limpiar-dia').addEventListener('click', () => {
+          if (!this.diaSeleccionado) return;
+          const num = this.diaSeleccionado.numero;
+          this.diaSeleccionado.meta = 0;
+          this.diaSeleccionado.logroPorcentaje = 0;
+          this.persistir();
+          this.renderizar();
+          this.cerrarModalDia();
+          this.mostrarToast(`Día ${num} limpiado`, '🧹');
+        });
+
+        document.getElementById('form-dia').addEventListener('submit', (e) => {
+          e.preventDefault();
+          if (!this.diaSeleccionado) return;
+
+          const metaIngresada = Number(document.getElementById('input-dia-meta').value) || 0;
+          const ventaIngresada = Number(document.getElementById('input-dia-venta-real').value) || 0;
+          let logroIngresado = Number(document.getElementById('input-dia-logro').value) || 0;
+
+          this.diaSeleccionado.meta = metaIngresada;
+          if (metaIngresada > 0 && ventaIngresada > 0 && logroIngresado === 0) {
+            logroIngresado = this.diaSeleccionado.calcularLogroDesdeVenta(ventaIngresada);
+          }
+          this.diaSeleccionado.logroPorcentaje = logroIngresado;
+
+          const num = this.diaSeleccionado.numero;
+          this.persistir();
+          this.renderizar();
+          this.cerrarModalDia();
+
+          const metaTotal = this.metas.find(m => m.id === 'total');
+          const pctGeneral = metaTotal ? metaTotal.logroPorcentaje : 0;
+          this.mostrarToast(`Día ${num} guardado · Meta Total: ${pctGeneral}%`, '✅');
+        });
+
+        // Eventos del Modal Meta Global
+        document.getElementById('cerrar-modal-meta').addEventListener('click', () => this.cerrarModalMeta());
+
+        document.getElementById('form-meta').addEventListener('submit', (e) => {
+          e.preventDefault();
+          if (!this.metaSeleccionada) return;
+
+          this.metaSeleccionada.montoObjetivo = Number(document.getElementById('input-meta-monto').value) || 0;
+          if (!this.metaSeleccionada.esCalculadaAutomatica) {
+            this.metaSeleccionada.logroPorcentaje = Number(document.getElementById('input-meta-logro').value) || 0;
+          }
+
+          const nombre = this.metaSeleccionada.nombre.replace(':', '');
+          this.persistir();
+          this.renderizar();
+          this.cerrarModalMeta();
+          this.mostrarToast(`${nombre} actualizada`, '🏆');
+        });
+
+        // Eventos del Inspector POO
+        const modalPoo = document.getElementById('modal-poo');
+        document.getElementById('btn-ver-poo').addEventListener('click', () => {
+          modalPoo.classList.remove('hidden');
+          modalPoo.classList.add('flex');
+        });
+        document.getElementById('cerrar-modal-poo').addEventListener('click', () => {
+          modalPoo.classList.add('hidden');
+          modalPoo.classList.remove('flex');
+        });
+
+        // Botón Restaurar datos de la foto
+        document.getElementById('btn-restaurar').addEventListener('click', () => {
+          this.restaurarValoresOriginales();
+        });
+
+        // Eventos del Modal Respaldo (Exportar / Importar JSON)
+        const modalRespaldo = document.getElementById('modal-respaldo');
+        const textareaRespaldo = document.getElementById('textarea-respaldo');
+
+        document.getElementById('btn-respaldo').addEventListener('click', () => {
+          const estadoActual = {
+            dias: this.dias.map(d => d.toJSON()),
+            metas: this.metas.map(m => m.toJSON())
+          };
+          textareaRespaldo.value = this.storage.exportarJSON(estadoActual);
+          modalRespaldo.classList.remove('hidden');
+          modalRespaldo.classList.add('flex');
+        });
+
+        document.getElementById('cerrar-modal-respaldo').addEventListener('click', () => {
+          modalRespaldo.classList.add('hidden');
+          modalRespaldo.classList.remove('flex');
+        });
+
+        document.getElementById('btn-copiar-respaldo').addEventListener('click', () => {
+          textareaRespaldo.select();
+          textareaRespaldo.setSelectionRange(0, 99999);
+          try {
+            document.execCommand('copy');
+            this.mostrarToast('Respaldo copiado al portapapeles', '📋');
+          } catch (err) {
+            this.mostrarToast('Selecciona y copia el texto manualmente', 'ℹ️');
+          }
+        });
+
+        document.getElementById('btn-descargar-json').addEventListener('click', () => {
+          const contenido = textareaRespaldo.value;
+          const blob = new Blob([contenido], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const enlace = document.createElement('a');
+          enlace.href = url;
+          enlace.download = 'respaldo_black_gallo_t96.json';
+          document.body.appendChild(enlace);
+          enlace.click();
+          document.body.removeChild(enlace);
+          URL.revokeObjectURL(url);
+          this.mostrarToast('Archivo .json descargado', '⬇️');
+        });
+
+        document.getElementById('btn-importar-json').addEventListener('click', () => {
+          try {
+            const datosImportados = this.storage.importarJSON(textareaRespaldo.value.trim());
+            this.dias = datosImportados.dias.map(d => new DiaVenta(d.numero, d.meta, d.logroPorcentaje));
+            this.metas = datosImportados.metas.map(m => new MetaCategoria(
+              m.id,
+              m.nombre,
+              m.montoObjetivo,
+              m.logroPorcentaje,
+              m.id === 'total' || m.esCalculadaAutomatica
+            ));
+            this.persistir();
+            this.renderizar();
+            modalRespaldo.classList.add('hidden');
+            modalRespaldo.classList.remove('flex');
+            this.mostrarToast('¡Datos restaurados con éxito!', '✅');
+          } catch (error) {
+            this.mostrarToast('Código JSON inválido, verifica el texto', '⚠️');
+          }
+        });
+      }
+    }
+
+    // Instanciar la aplicación orientada a objetos al cargar el DOM
+    window.addEventListener('DOMContentLoaded', () => {
+      window.appBlackGallo = new TableroVentas('T96 Jesus De Otoro - Los mas Gallos');
+    });
+  </script>
+</body>
+</html>
